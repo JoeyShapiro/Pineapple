@@ -18,7 +18,7 @@ groups = gs.split(" ") # split into array with space as the delimenator
 groups_grades = {}
 
 for group in groups:
-    w = input("What is the weight (eg. 80): ") # the weight
+    w = input(f"What is the weight (eg. 80) of {group}: ") # the weight
 
     grades_got = [] # list of grades the user got
     grades_out = [] # list of grades the grades are out of
@@ -35,13 +35,36 @@ for group in groups:
     groups_grades[group] = dict_group # put dict in dict at index of dict
 
 check_desire = False
-for dgroup in groups_grades: # check if a star or unknown exists
+for d in groups_grades: # check if a star or unknown exists
+    dgroup = groups_grades[d]
     if "*" in dgroup["grades_got"]:
         check_desire = True
         break # dont need to keep looking, i think...
 
 if check_desire: # if is do stuff maybe with systems of equations
     desired = input("What grade do you want (eg. 90): ")
+    d = 0
+
+    # if 1 is unknown (final check)
+    for di in groups_grades:
+        dgroup = groups_grades[di]
+        if "*" in dgroup['grades_got']:
+            group_unknown = dgroup
+        else:
+            int_got = [int(s) for s in dgroup['grades_got']]
+            int_out = [int(s) for s in dgroup['grades_out']]
+            d += sum(int_got) / sum(int_out) / (int(dgroup['w'])/ 100)
+    
+    c = sum([int(s) for s in dgroup['grades_out']])
+    a = 0
+    for grade in group_unknown['grades_got']:
+        if grade is not "*":
+            a += int(grade)
+
+    b = int(group_unknown['w']) / 100
+            
+    star = (((int(desired) - d) * c) - (a * b)) / b
+    print(f"You need a {star} on the * to get an {desired}")
 else:
     for dgroup in groups_grades:
         total += sum(dgroup[grades_got]) / sum(dgroup[grades_out]) / (dgroup[w] / 100) # maybe remove "/100"
