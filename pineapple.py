@@ -43,6 +43,7 @@ for d in groups_grades: # check if a star or unknown exists
 
 if check_desire: # if is do stuff maybe with systems of equations
     desired = input("What grade do you want (eg. 90): ")
+    f = int(desired) / 100
     d = 0
 
     # if 1 is unknown (final check)
@@ -53,9 +54,9 @@ if check_desire: # if is do stuff maybe with systems of equations
         else:
             int_got = [int(s) for s in dgroup['grades_got']]
             int_out = [int(s) for s in dgroup['grades_out']]
-            d += sum(int_got) / sum(int_out) / (int(dgroup['w'])/ 100)
+            d += sum(int_got) / sum(int_out) * (int(dgroup['w']) / 100)
     
-    c = sum([int(s) for s in dgroup['grades_out']])
+    c = sum([int(s) for s in group_unknown['grades_out']])
     a = 0
     for grade in group_unknown['grades_got']:
         if grade is not "*":
@@ -63,10 +64,13 @@ if check_desire: # if is do stuff maybe with systems of equations
 
     b = int(group_unknown['w']) / 100
             
-    star = (((int(desired) - d) * c) - (a * b)) / b
+    star = (((f - d) * c) / b) - a
     print(f"You need a {star} on the * to get an {desired}")
+    if star < 0:
+        print("You can not get a LOW enough score to get that grade")
+    elif star > 100:
+        print("You can not get a HIGH enough score to get that grade")
 else:
     for dgroup in groups_grades:
-        total += sum(dgroup[grades_got]) / sum(dgroup[grades_out]) / (dgroup[w] / 100) # maybe remove "/100"
-
-print("total: ", total)
+        total += sum(dgroup[grades_got]) / sum(dgroup[grades_out]) * (dgroup[w] / 100) # maybe remove "/100"
+    print("total:", total)
