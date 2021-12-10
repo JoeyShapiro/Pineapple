@@ -47,30 +47,31 @@ if check_desire: # if is do stuff maybe with systems of equations
     d = 0
 
     # if 1 is unknown (final check)
-    for di in groups_grades:
-        dgroup = groups_grades[di]
-        if "*" in dgroup['grades_got']:
-            group_unknown = dgroup
-        else:
-            int_got = [int(s) for s in dgroup['grades_got']]
-            int_out = [int(s) for s in dgroup['grades_out']]
-            d += sum(int_got) / sum(int_out) * (int(dgroup['w']) / 100)
+    for di in groups_grades: # for each group
+        dgroup = groups_grades[di] # name it
+        if "*" in dgroup['grades_got']: # if the unknown is in here
+            group_unknown = dgroup # name it
+        else: # do basic arithmatic
+            int_got = [int(s) for s in dgroup['grades_got']] # create int array
+            int_out = [int(s) for s in dgroup['grades_out']] # create int array
+            d += sum(int_got) / sum(int_out) * (int(dgroup['w']) / 100) # get the sum with weight
     
-    c = sum([int(s) for s in group_unknown['grades_out']])
+    c = sum([int(s) for s in group_unknown['grades_out']]) # get the sum of the bottom of unknown
     a = 0
-    for grade in group_unknown['grades_got']:
+    for grade in group_unknown['grades_got']: # do math on unknown portion
         if grade is not "*":
-            a += int(grade)
+            a += int(grade) # add numerical grade to a
 
     b = int(group_unknown['w']) / 100
             
-    star = (((f - d) * c) / b) - a
+    star = (((f - d) * c) / b) - a # solve for x (the unknown)
     print(f"You need a {star} on the * to get an {desired}")
-    if star < 0:
+    if star < 0: # if x is a negative number
         print("You can not get a LOW enough score to get that grade")
-    elif star > 100:
+    elif star > 100: # if x is over 100%
         print("You can not get a HIGH enough score to get that grade")
-else:
+
+else: # if there is no star and you are solving for total (because youre boring)
     for dgroup in groups_grades:
         total += sum(dgroup[grades_got]) / sum(dgroup[grades_out]) * (dgroup[w] / 100) # maybe remove "/100"
     print("total:", total)
